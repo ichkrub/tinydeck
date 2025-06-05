@@ -6,6 +6,7 @@ import { UploadCard } from '@/components/UploadCard';
 import { FileStats } from '@/components/FileStats';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
+import { AnimatedBackground } from '@/components/AnimatedBackground';
 
 export default function Home() {
   const [processing, setProcessing] = useState(false);
@@ -79,6 +80,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0D1117] text-white relative overflow-hidden">
+      <AnimatedBackground />
       <div className="checker-background" />
       <Navbar />
       <main className="container mx-auto px-4 pt-32 pb-16 sm:px-6 lg:px-8 min-h-screen flex flex-col relative">

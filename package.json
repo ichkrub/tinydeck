@@ -10,21 +10,24 @@
     "generate-favicons": "node scripts/generate-favicons.mjs"
   },
   "dependencies": {
-    "@next/font": "^14.2.15",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/supabase-js": "^2.49.10",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.35.0",
     "@vercel/kv": "^3.0.0",
     "axios": "^1.9.0",
     "classnames": "^2.5.1",
+    "framer-motion": "^12.16.0",
     "geist": "^1.4.2",
     "ghostscript-node": "^1.5.0",
     "lucide-react": "^0.512.0",
-    "next": "14.1.0",
+    "next": "^15.3.3",
     "pdf-lib": "^1.17.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "sharp": "^0.33.2"
+    "sharp": "^0.33.2",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -33,7 +36,7 @@
     "@types/react-dropzone": "^4.2.2",
     "autoprefixer": "^10.4.17",
     "eslint": "^8",
-    "eslint-config-next": "14.1.0",
+    "eslint-config-next": "^15.3.3",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
