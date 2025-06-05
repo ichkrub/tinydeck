@@ -3,8 +3,9 @@ import { GeistSans } from 'geist/font';
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "TinyDeck.me - PDF Compression",
-  description: "Compress your PDF files quickly and easily",
+  title: "Compress PDF Presentations Online | TinyDeck",
+  description: "Fast, free PDF compressor for pitch decks and slides. Shrink presentation PDFs online without losing quality. No login required.",
+  keywords: "pdf compressor, compress pdf, reduce pdf size, presentation pdf, pitch deck compressor, slide pdf smaller, free pdf compressor online, pdf compression tool",
   icons: {
     icon: [
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },

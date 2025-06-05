@@ -11,9 +11,10 @@ interface FileWithPreview extends File {
 
 interface UploadCardProps {
   onFileAccepted: (file: File) => void;
+  remainingTries?: number;
 }
 
-export function UploadCard({ onFileAccepted }: UploadCardProps) {
+export function UploadCard({ onFileAccepted, remainingTries = 3 }: UploadCardProps) {
   const [file, setFile] = useState<FileWithPreview | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -107,9 +108,14 @@ export function UploadCard({ onFileAccepted }: UploadCardProps) {
                   browse
                 </span>
               </p>
-              <p className="text-sm text-gray-500">
-                PDF up to 25MB
-              </p>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-500">
+                  PDF up to 25MB
+                </p>
+                <p className="text-sm text-gray-500">
+                  <span className="text-indigo-400">{remainingTries}</span> compressions remaining today
+                </p>
+              </div>
             </div>
           </div>
         )}
