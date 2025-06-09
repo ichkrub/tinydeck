@@ -22,12 +22,24 @@ export async function POST(request: NextRequest) {
                  request.headers.get('x-real-ip') || 
                  'anonymous';
     const rateLimiter = RateLimiter.getInstance();
-    const { success, remaining } = await rateLimiter.isAllowed(ip);
+    const { success, remaining, limit } = await rateLimiter.isAllowed(ip);
 
     if (!success) {
       return NextResponse.json(
-        { error: 'Rate limit exceeded. Please try again tomorrow.' },
-        { status: 429 }
+        { 
+          error: 'Rate limit exceeded. Please try again tomorrow.',
+          limit,
+          remaining: 0,
+          resetTime: Date.now() + 24 * 60 * 60 * 1000 // 24 hours from now
+        },
+        { 
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': limit.toString(),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': (Date.now() + 24 * 60 * 60 * 1000).toString()
+          }
+        }
       );
     }
 
@@ -61,7 +73,12 @@ export async function POST(request: NextRequest) {
       await writeFile(inputPath, buffer);
 
       // Compress PDF
-      await compressPDF(inputPath, outputPath);
+      try {
+        await compressPDF(inputPath, outputPath);
+      } catch (error) {
+        console.error('GhostScript error:', error);
+        throw new Error('Failed to compress PDF. The file might be corrupted or password-protected.');
+      }
 
       // Read compressed file
       const compressedFile = await readFile(outputPath);
@@ -91,10 +108,10 @@ export async function POST(request: NextRequest) {
       ]);
       throw error;
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error compressing PDF:', error);
     return NextResponse.json(
-      { error: 'Error compressing PDF' },
+      { error: error.message || 'Error compressing PDF. Please try again.' },
       { status: 500 }
     );
   }

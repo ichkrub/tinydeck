@@ -3,9 +3,13 @@
 import { FileText } from 'lucide-react';
 import Link from 'next/link';
 
-export function Logo() {
+interface LogoProps {
+  className?: string;
+}
+
+export function Logo({ className }: LogoProps) {
   return (
-    <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+    <Link href="/" className={`flex items-center gap-2 hover:opacity-90 transition-opacity ${className || ''}`}>
       <div className="text-indigo-400">
         <FileText size={28} />
       </div>

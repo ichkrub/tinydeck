@@ -3,14 +3,25 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get('code');
+  try {
+    const requestUrl = new URL(request.url);
+    const code = requestUrl.searchParams.get('code');
 
-  if (code) {
+    if (!code) {
+      throw new Error('No code provided');
+    }
+
     const supabase = createRouteHandlerClient({ cookies });
-    await supabase.auth.exchangeCodeForSession(code);
-  }
+    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+    
+    if (exchangeError) {
+      throw exchangeError;
+    }
 
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect(new URL('/dashboard', requestUrl.origin));
+    // After successful authentication, always redirect to dashboard
+    return NextResponse.redirect(new URL('/dashboard', requestUrl.origin));
+  } catch (error) {
+    console.error('Auth callback error:', error);
+    return NextResponse.redirect(new URL('/login?error=auth_callback_error', request.url));
+  }
 }

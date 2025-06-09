@@ -61,9 +61,9 @@ export function UploadCard({ onFileAccepted, remainingTries = 3 }: UploadCardPro
       <div
         {...getRootProps()}
         className={classNames(
-          'flex flex-col items-center justify-center w-full p-12 border-2 border-dashed rounded-2xl backdrop-blur-sm transition-all duration-300',
+          'flex flex-col items-center justify-center w-full min-h-[300px] border-2 border-dashed rounded-2xl backdrop-blur-sm transition-all duration-300',
           {
-            'border-indigo-400 bg-[#1E2430] shadow-indigo-900/50': isDragActive,
+            'border-indigo-400 bg-[#1E2430] shadow-lg shadow-indigo-900/20': isDragActive,
             'border-gray-800 hover:border-indigo-500 hover:bg-[#1E2430]/50': !isDragActive,
             'bg-[#141921]/80': !isDragActive && !file
           }
@@ -88,13 +88,13 @@ export function UploadCard({ onFileAccepted, remainingTries = 3 }: UploadCardPro
             </button>
           </div>
         ) : (
-          <div className="flex flex-col items-center text-center space-y-6">
+          <div className="flex flex-col items-center text-center space-y-3">
             <div className={classNames(
-              'rounded-full p-6 transition-colors duration-300',
+              'rounded-full p-3 transition-colors duration-300',
               isDragActive ? 'bg-[#1E2430]' : 'bg-[#1E2430]/50'
             )}>
               <Upload 
-                size={40} 
+                size={24} 
                 className={classNames(
                   'transition-colors duration-300',
                   isDragActive ? 'text-indigo-400' : 'text-gray-500'
@@ -102,7 +102,7 @@ export function UploadCard({ onFileAccepted, remainingTries = 3 }: UploadCardPro
               />
             </div>
             <div className="space-y-2">
-              <p className="text-base text-gray-400">
+              <p className="text-sm text-gray-400">
                 Drop your PDF here, or{' '}
                 <span className="text-indigo-400 hover:text-indigo-300 font-medium underline decoration-1 underline-offset-2 cursor-pointer">
                   browse

@@ -1,18 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export function Auth() {
+  const router = useRouter();
+  const supabase = createClientComponentClient();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  // Check if we're already logged in and handle auth state changes
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        router.replace('/dashboard');
+      }
+    });
+
+    // Initial session check
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        router.replace('/dashboard');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth, router]);
+
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
-      setMessage(null);
+      setMessage('Signing in...');
       
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -20,8 +43,16 @@ export function Auth() {
       });
 
       if (error) throw error;
+      
+      setMessage('Login successful!');
+      // The onAuthStateChange handler will handle redirect
+      
     } catch (error: any) {
-      setMessage(error.message || 'Error signing in. Please try again.');
+      console.error('Login error:', error);
+      const errorMessage = error.message === 'Invalid login credentials'
+        ? 'Invalid email or password'
+        : error.message || 'Error signing in. Please try again.';
+      setMessage(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -30,18 +61,40 @@ export function Auth() {
   const handleOAuthLogin = async (provider: 'github' | 'google') => {
     try {
       setLoading(true);
-      setMessage(null);
+      setMessage('Connecting to ' + provider + '...');
       
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error, data } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            // For Google, request offline access and force consent screen
+            ...(provider === 'google' && {
+              access_type: 'offline',
+              prompt: 'consent',
+            }),
+          },
         }
       });
 
       if (error) throw error;
-    } catch (error) {
-      setMessage('Error signing in. Please try again.');
+      
+      // On successful OAuth initiation, the provider's popup/redirect will handle the rest
+      setMessage('Redirecting to ' + provider + '...');
+      
+    } catch (error: any) {
+      console.error('OAuth error:', error);
+      let errorMessage: string;
+      
+      if (error.message?.includes('popup_closed_by_user')) {
+        errorMessage = 'Sign in cancelled. Please try again.';
+      } else if (error.message?.includes('popup_blocked')) {
+        errorMessage = 'Pop-up blocked. Please enable pop-ups for this site.';
+      } else {
+        errorMessage = error.message || 'Error signing in. Please try again.';
+      }
+      
+      setMessage(errorMessage);
       setLoading(false);
     }
   };

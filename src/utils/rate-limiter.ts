@@ -12,11 +12,12 @@ export class RateLimiter {
       token: process.env.UPSTASH_REDIS_REST_TOKEN || '',
     });
 
-    // Create rate limiter that allows 3 requests per day per IP
+    // Create rate limiter that allows 3 requests per day per IP or user
     this.ratelimit = new Ratelimit({
       redis,
       limiter: Ratelimit.slidingWindow(3, '24 h'),
       analytics: true,
+      prefix: 'ratelimit:pdf:',
     });
   }
 

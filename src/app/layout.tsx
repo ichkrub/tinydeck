@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { GeistSans } from 'geist/font';
 import "./globals.css";
+import { SessionProvider } from "@/components/SessionProvider";
 
 export const metadata: Metadata = {
   title: "Compress PDF Presentations Online | TinyDeck",
@@ -27,8 +28,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={GeistSans.className}>
-      <body className="antialiased bg-gradient-to-br from-indigo-50 via-white to-gray-50 text-gray-900 selection:bg-indigo-100">
-        {children}
+      <body className="antialiased bg-[#0E1117] min-h-screen">
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

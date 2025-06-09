@@ -54,8 +54,16 @@ export default function Home() {
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to compress PDF');
+        const text = await response.text();
+        let errorMessage = 'Failed to compress PDF';
+        try {
+          const data = JSON.parse(text);
+          errorMessage = data.error || errorMessage;
+        } catch (e) {
+          // If the response is not valid JSON, use the text as is
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
       // Update remaining tries from response headers
@@ -104,9 +112,9 @@ export default function Home() {
 
           {/* Main Content */}
           <div className="space-y-8">
-            <div className="w-full">
+            <div className="w-full max-w-2xl mx-auto">
               {processing ? (
-                <div className="bg-[#141921]/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-12 text-center transform transition-all duration-300">
+                <div className="bg-[#141921]/80 backdrop-blur-sm rounded-2xl border border-gray-800 p-8 text-center transform transition-all duration-300">
                   <div className="flex flex-col items-center justify-center">
                     <div className="bg-[#1E2430] rounded-full p-6">
                       <FileUp className="w-12 h-12 text-indigo-400 animate-bounce" />
