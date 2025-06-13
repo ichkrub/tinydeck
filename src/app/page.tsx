@@ -97,7 +97,7 @@ export default function Home() {
           <div className="mb-16">
             <div className="flex flex-col items-center justify-center space-y-8">
               <div className="space-y-6 text-center max-w-3xl">
-                <h1 className="text-5xl sm:text-7xl font-bold text-white leading-tight tracking-tight">
+                <h1 className="text-5xl sm:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-indigo-300 leading-tight tracking-tight">
                   Compress Your Presentation PDFs Instantly.
                 </h1>
                 <h2 className="text-xl sm:text-2xl text-gray-400 font-normal leading-relaxed">
